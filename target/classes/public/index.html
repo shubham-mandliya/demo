@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head> 
+	<meta charset='utf-8'>
+	<title> Bill Management</title>
+<script>
+	
+	function addBill(){
+			
+			var billedTo = document.querySelector("#addBillDivision").querySelector("#billed_to").value;			
+			var billedDate = document.querySelector("#addBillDivision").querySelector("#billed_date").value;
+			var billedAmount = document.querySelector("#addBillDivision").querySelector("#billed_amount").value;			
+			var taxOnTheBill = document.querySelector("#addBillDivision").querySelector("#tax_on_the_bill").value;			
+			var totalAmount = document.querySelector("#addBillDivision").querySelector("#total_amount").value;						
+			var dueDate = document.querySelector("#addBillDivision").querySelector("#due_date").value;			
+			
+			
+			var bill = new Bill();
+			bill.billedTo = billedTo;
+			bill.billedDate = billedDate;
+			bill.billedAmount = billedAmount;
+			bill.taxOnTheBill = taxOnTheBill;
+			bill.totalAmount = totalAmount;
+			bill.dueDate = dueDate;
+
+			var httpRequest = new XMLHttpRequest();
+			
+			httpRequest.onreadystatechange=function(){
+					if(httpRequest.readyState == 4){
+						if(httpRequest.status == 201){
+							var responseJson = JSON.parse(httpRequest.responseText);
+							alert("Bill added!!!");
+						}
+						else{
+							alert(httpRequest.status + ": Cannot process request!!");							
+						}
+					}
+			};
+			
+			httpRequest.open('POST', '/bills', true);
+			httpRequest.setRequestHeader("Content-type","application/json");						
+			httpRequest.send(JSON.stringify(bill));
+	}
+	function Bill(){
+		this.billedTo = "";
+		this.billedDate = "";
+		this.billedAmount = "";
+		this.taxOnTheBill = "";
+		this.totalAmount = "";
+		this.dueDate = "";
+		
+	}
+	
+</script>
+</head>
+<body>
+	<h1> Add Bill</h1>
+	<div id = 'addBillDivision' style='border:1px solid blue'>
+	Billed To <input type='text' id='billed_to' name='billed_to'>	 <br>
+	Billed Date <input type='text' id='billed_date' name='billed_date' placeholder="YYYY-MM-DD">	<br>	
+	Billed Amount <input type='text' id='billed_amount' name='billed_amount'>	 <br>	
+	Tax on the Bill <input type='text' id='tax_on_the_bill' name='tax_on_the_bill'>	 <br>	
+	Total Amount <input type='text' id='total_amount' name='total_amount'>	<br>	
+	Due Date <input type='text' id='due_date' name='due_date' placeholder="YYYY-MM-DD">	 <br>		
+	<button type='button' onclick='addBill()'> Add </button>
+	</div>
+
+</body>
+</html>
